@@ -54,6 +54,7 @@ config/branding.yml
 # Ignore some of the initializers
 config/initializers/wicked_pdf.rb
 config/initializers/fingerprint.rb
+config/initializers/contact_us.rb
 
 # Ignore enviroments settings
 #config/environments/development.rb
@@ -118,3 +119,6 @@ yarn-debug.log*
 
 # Ignore briley AWS cloud9 script to start the application
 cloud9-start.sh
+
+# Ignore vendor
+vendor

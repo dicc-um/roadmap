@@ -43,7 +43,16 @@ Rails.application.configure do
 
   # settings for mailcatcher
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { address: 'mailcatcher', port: 1025 }
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch('SMTP_ADDRESS'),
+    port: ENV.fetch('SMTP_PORT'),
+    domain: ENV.fetch('SMTP_HOST'),
+    user_name: ENV.fetch('SMTP_MAIL', Rails.application.credentials.smtp_mail),
+    password: ENV.fetch('SMTP_PASSWORD', Rails.application.credentials.smtp_password),
+    authentication: ENV.fetch('SMTP_AUTH'),
+    enable_starttls_auto: ENV.fetch('SMTP_TLS')
+  }
+
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
