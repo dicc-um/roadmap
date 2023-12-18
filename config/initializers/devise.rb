@@ -259,7 +259,7 @@ Devise.setup do |config|
 
   # Any entries here MUST match a corresponding entry in the identifier_schemes table as
   # well as an identifier_schemes.schemes section in each locale file!
-  OmniAuth.config.full_host = 'https://my_service.hostname'
+  OmniAuth.config.full_host = ENV.fetch('DMPROADMAP_HOST')
   OmniAuth.config.allowed_request_methods = [:post]
 
   config.omniauth :orcid,
@@ -280,6 +280,15 @@ Devise.setup do |config|
                     },
                     extra_fields: []
                   }
+  # Added Omniauth Keycloak middleware
+  config.omniauth :keycloak_openid,
+                  ENV.fetch('KEYCLOAK_CLIENT_ID'), ENV.fetch('KEYCLOAK_SECRET'),
+                  client_options:
+                    {
+                      site: ENV.fetch('KEYCLOAK_SITE'),
+                      realm: ENV.fetch('KEYCLOAK_REALM'),
+                      base_url: ''
+                    }, :strategy_class => OmniAuth::Strategies::KeycloakOpenId
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

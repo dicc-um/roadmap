@@ -94,6 +94,12 @@ gem 'omniauth-shibboleth'
 # (https://github.com/datacite/omniauth-orcid)
 gem 'omniauth-orcid'
 
+# OmniAuth KeyCloak strategies for OmniAuth
+gem 'omniauth-keycloak'
+
+# Activerecord-session_store for cookies
+gem 'activerecord-session_store'
+
 # This gem provides a mitigation against CVE-2015-9284 (Cross-Site Request
 # Forgery on the request phase when using OmniAuth gem with a Ruby on Rails
 # application) by implementing a CSRF token verifier that directly uses

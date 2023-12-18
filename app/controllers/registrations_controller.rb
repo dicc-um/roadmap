@@ -25,10 +25,11 @@ class RegistrationsController < Devise::RegistrationsController
       oauth = session["devise.#{scheme.name.downcase}_data"] unless session["devise.#{scheme.name.downcase}_data"].nil?
     end
 
-    @user = User.new
-
     # no oath, no provider or no uid - bail out
     return if oauth.nil? || oauth['provider'].nil? || oauth['uid'].nil?
+
+    # Initialize the user from KeyCloak using returned Hash
+    @user = User.from_omniauth(oauth)
 
     # Connect the new user with the identifier sent back by the OAuth provider
     flash[:notice] = format(_("Please make a choice below. After linking your
@@ -46,6 +47,19 @@ class RegistrationsController < Devise::RegistrationsController
     IdentifierScheme.for_users.each do |scheme|
       oauth = session["devise.#{scheme.name.downcase}_data"] unless session["devise.#{scheme.name.downcase}_data"].nil?
     end
+    @user = User.from_omniauth(oauth)
+
+    # Overwrite submitted form inputs with information from Keycloak
+    params['user']['firstname'] = @user.firstname
+    params['user']['surname'] = @user.surname
+    params['user']['email'] = @user.email
+    params['user']['provider'] = @user.provider
+    params['user']['uid'] = @user.uid
+    params['user']['password'] = SecureRandom.hex
+
+    # Search for Organisation with 'UM' abbreviation
+    org_name = Org.find_by(abbreviation: 'UM').name
+    params['user']['org_id'] = '{"name": "'+ org_name + '"}'
 
     blank_org = if Rails.configuration.x.application.restrict_orgs
                   sign_up_params[:org_id]['id'].blank?
@@ -290,11 +304,12 @@ class RegistrationsController < Devise::RegistrationsController
   end
   # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
+  # Added provider and uid as sign up params
   def sign_up_params
     params.require(:user).permit(:email, :password, :password_confirmation,
                                  :firstname, :surname, :recovery_email,
                                  :accept_terms, :org_id, :org_name,
-                                 :org_crosswalk, :language_id)
+                                 :org_crosswalk, :language_id, :provider, :uid)
   end
 
   def update_params

@@ -3,6 +3,23 @@
 module Users
   # Controller that handles callbacks from OmniAuth integrations (e.g. Shibboleth and ORCID)
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+    # Add KeyCloak Openid callback controller.
+    def keycloakopenid
+      # Rails.logger.debug(request.env["omniauth.auth"])
+      oauth = request.env["omniauth.auth"]
+      @user = User.from_omniauth(oauth)
+      if @user.persisted?
+        # Synchronise the profile with the new Hash informations after signed in successfully
+        @user.firstname = oauth.extra.raw_info.given_name
+        @user.surname = oauth.extra.raw_info.family_name
+        @user.email = oauth.extra.raw_info.email
+        sign_in_and_redirect @user, event: :authentication
+      else
+        session["devise.keycloakopenid_data"] = oauth
+        redirect_to (new_user_registration_url)
+      end
+    end
+
     ##
     # Dynamically build a handler for each omniauth provider
     # -------------------------------------------------------------
