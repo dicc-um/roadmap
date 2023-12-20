@@ -151,17 +151,18 @@ class RegistrationsController < Devise::RegistrationsController
   # rubocop:disable Metrics/AbcSize
   def update
     if user_signed_in?
-      @prefs = @user.get_preferences(:email)
-      @orgs = Org.order('name')
-      @default_org = current_user.org
-      @other_organisations = Org.where(is_other: true).pluck(:id)
-      @identifier_schemes = IdentifierScheme.for_users.order(:name)
-      @languages = Language.sorted_by_abbreviation
-      if params[:skip_personal_details] == 'true'
-        do_update_password(current_user, update_params)
-      else
-        do_update(needs_password?(current_user))
-      end
+      # Disable local profile update
+      # @prefs = @user.get_preferences(:email)
+      # @orgs = Org.order('name')
+      # @default_org = current_user.org
+      # @other_organisations = Org.where(is_other: true).pluck(:id)
+      # @identifier_schemes = IdentifierScheme.for_users.order(:name)
+      # @languages = Language.sorted_by_abbreviation
+      # if params[:skip_personal_details] == 'true'
+      #   do_update_password(current_user, update_params)
+      # else
+      #   do_update(needs_password?(current_user))
+      # end
     else
       render(file: File.join(Rails.root, 'public/403.html'), status: 403, layout: false)
     end
