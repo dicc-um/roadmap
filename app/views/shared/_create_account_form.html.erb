@@ -2,36 +2,21 @@
 
   <div class="form-group">
     <%= f.label(:firstname, _('First Name'), class: "control-label") %>
-    <%= f.text_field(:firstname, class: "form-control", "aria-required": true) %>
+    <!-- Changed text_field to form-control-plaintext for form control -->
+    <div class="form-control-plaintext"><%= @user.firstname %></div>
   </div>
   <div class="form-group">
     <%= f.label(:surname, _('Last Name'), class: "control-label") %>
-    <%= f.text_field(:surname, class: "form-control", "aria-required": true) %>
+    <!-- Changed text_field to form-control-plaintext for form control -->
+    <div class="form-control-plaintext"><%= @user.surname %></div>
   </div>
   <div class="form-group">
     <%= f.label(:email, _('Email'), class: "control-label") %>
-    <%= f.email_field(:email, class: "form-control", "aria-required": true) %>
+    <!-- Changed email_field to form-control-plaintext for form control -->
+    <div class="form-control-plaintext"><%= @user.email %></div>
   </div>
-  <div class="form-group" id="create-account-org-controls">
-    <%= render partial: org_partial,
-               locals: {
-                 form: f,
-                 orgs: orgs,
-                 default_org: resource&.org,
-                 required: true
-               } %>
-  </div>
-  <div class="form-group">
-    <%= f.label(:password, _('Password'), class: "control-label") %>
-    <%= f.password_field(:password, class: "form-control", "aria-required": true, value: SecureRandom.hex) %>
-  </div>
-  <div class="form-group">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" id="passwords_toggle_sign_up" class="passwords_toggle" /><%= _('Show password') %>
-      </label>
-    </div>
-  </div>
+  <!-- Remove organisation field -->
+  <!-- Remove password field -->
   <div class="form-group">
     <div class="checkbox">
       <%= f.label(:accept_terms) do %>
