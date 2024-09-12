@@ -10,7 +10,7 @@ Rails.application.routes.draw do
                sessions: 'sessions',
                omniauth_callbacks: 'users/omniauth_callbacks',
                invitations: 'users/invitations'
-             }) do
+             }, :skip => [:passwords]) do
     get '/users/sign_out', to: 'devise/sessions#destroy'
   end
 
