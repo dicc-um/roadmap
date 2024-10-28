@@ -66,7 +66,7 @@ module DMPRoadmap
     # -------------------- #
 
     # Used throughout the system via ApplicationService.application_name
-    config.x.application.name = 'DMPRoadmap'
+    config.x.application.name = ENV.fetch('DMP_NAME','DMPRoadmap')
     # Used as the default domain when 'archiving' (aka anonymizing) a user account
     # for example `jane.doe@uni.edu` becomes `1234@removed_accounts-example.org`
     config.x.application.archived_accounts_email_suffix = '@removed_accounts-example.org'
@@ -137,7 +137,7 @@ module DMPRoadmap
 
     # Relative path to Shibboleth SSO Logouts
     config.x.shibboleth.login_url = '/Shibboleth.sso/Login'
-    config.x.shibboleth.logout_url = '/Shibboleth.sso/Logout?return='
+    config.x.shibboleth.logout_url = '/'
 
     # If this value is set to true your users will be presented with a list of orgs that have a
     # shibboleth identifier in the orgs_identifiers table. If it is set to false (default), the user

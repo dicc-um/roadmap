@@ -51,7 +51,7 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = ENV.fetch('RAILS_FORCE_SSL', true)
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -132,4 +132,4 @@ Rails.application.configure do
   config.hosts << ENV['DMPROADMAP_HOST'] if ENV['DMPROADMAP_HOST'].present?
 end
 # Used by Rails' routes url_helpers (typically when including a link in an email)
-Rails.application.routes.default_url_options[:host] = ENV.fetch('DMPROADMAP_HOST', 'example.org')
+Rails.application.routes.default_url_options[:host] = ENV.fetch('DMPROADMAP_HOST')
