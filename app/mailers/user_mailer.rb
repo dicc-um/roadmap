@@ -54,7 +54,7 @@ class UserMailer < ActionMailer::Base
     @user_email = @user.email
     @username   = @user.name
     @inviter    = inviter
-    @link       = url_for(action: 'show', controller: 'plans', id: @role.plan.id)
+    @link       = url_for(action: 'show', controller: 'plans', id: @role.plan.id, host: ENV.fetch('DMPROADMAP_HOST'))
     @helpdesk_email = helpdesk_email(org: @inviter.org)
 
     I18n.with_locale I18n.default_locale do
@@ -192,6 +192,7 @@ class UserMailer < ActionMailer::Base
     @username  = @user.name
     @ul_list   = privileges_list(@user)
     @helpdesk_email = helpdesk_email(org: @user.org)
+    @help_url  = 'https://' + ENV.fetch('DMPROADMAP_HOST') + '/help'
 
     I18n.with_locale I18n.default_locale do
       mail(to: user.email,

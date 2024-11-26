@@ -51,7 +51,7 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = ENV.fetch('RAILS_FORCE_SSL', true)
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -67,7 +67,18 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "dmp_roadmap_#{Rails.env}"
 
+  # SMTP Mailer configuration
   config.action_mailer.perform_caching = false
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch('SMTP_ADDRESS'),
+    port: ENV.fetch('SMTP_PORT'),
+    domain: ENV.fetch('SMTP_HOST'),
+    user_name: Rails.application.credentials.smtp_mail,
+    password: Rails.application.credentials.smtp_password,
+    authentication: ENV.fetch('SMTP_AUTH'),
+    enable_starttls_auto: ENV.fetch('SMTP_TLS')
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -132,4 +143,4 @@ Rails.application.configure do
   config.hosts << ENV['DMPROADMAP_HOST'] if ENV['DMPROADMAP_HOST'].present?
 end
 # Used by Rails' routes url_helpers (typically when including a link in an email)
-Rails.application.routes.default_url_options[:host] = ENV.fetch('DMPROADMAP_HOST', 'example.org')
+Rails.application.routes.default_url_options[:host] = ENV.fetch('DMPROADMAP_HOST')
