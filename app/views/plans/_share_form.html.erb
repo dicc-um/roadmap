@@ -100,6 +100,7 @@
 
 <% if administerable  %>
   <h2><%= _('Invite collaborators') %></h2>
+  <p><%= _('User email must be registered in DMPRoadmap before invitation is possible.') %></p>
   <% new_role = Role.new %>
   <% new_role.plan = @plan %>
   <%= form_for new_role, url: {controller: :roles, action: :create }, html: {method: :post} do |f| %>

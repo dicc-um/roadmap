@@ -7,9 +7,12 @@
     <%= f.label(:password, _('Password'), class: 'control-label') %>
     <%= f.password_field(:password, class: 'form-control', "aria-required": true) %>
   </div>
+
+  <!-- Redirect forgot password to Keycloak SSO -->
   <div>
-    <%= link_to _('Forgot password?'), new_password_path('user') %>
+    <%= link_to _('Forgot password?'), ENV.fetch('KEYCLOAK_SITE') %>
   </div>
+
   <div class="checkbox">
     <%= label_tag 'remember_email' do %>
       <%= check_box_tag 'remember_email' %>
@@ -17,19 +20,10 @@
     <% end %>
   </div>
   <%= f.button(_('Sign in'), class: "btn btn-default", type: "submit") %>
+  <!-- Removed Shibboleth login button -->
+<% end %>
 
-  <% if Rails.configuration.x.shibboleth.enabled %>
-    <% if session['devise.shibboleth_data'].nil? %>
-      <p class="text-center fontsize-h4">- <%= _('or') %> -</p>
-      <div class="form-group">
-        <span class="center-block btn-group-justified">
-          <% target = (Rails.configuration.x.shibboleth.use_filtered_discovery_service ? shibboleth_ds_path : user_shibboleth_omniauth_authorize_path) %>
-          <%= link_to _('Sign in with your institutional credentials'), target, method: :post, class: 'btn btn-default' %>
-        </span>
-      </div>
-    <% else %>
-      <%= f.hidden_field :shibboleth_id, :value => session['devise.shibboleth_data']['uid'] %>
-    <% end %>
-  <% end %>
-
+<%= form_tag('/users/auth/keycloakopenid', method: 'post', data: {turbo: false}) do %>
+  <%= hidden_field_tag :ui_locale, 'en' %>
+  <button type='submit' class='btn btn-default'>Login with Keycloak</button>
 <% end %>

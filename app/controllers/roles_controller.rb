@@ -38,31 +38,25 @@ class RolesController < ApplicationController
         else
           # rubocop:disable Metrics/BlockNesting
           if user.nil?
-            registered = false
-            User.invite!({ email: role_params[:user][:email],
-                           firstname: _('First Name'),
-                           surname: _('Surname'),
-                           org: current_user.org },
-                         current_user)
-            message = format(_('Invitation to %{email} issued successfully.'),
-                             email: role_params[:user][:email])
-            user = User.where_case_insensitive('email', role_params[:user][:email]).first
-          end
-
-          message += format(_('Plan shared with %{email}.'), email: user.email)
-          @role.user = user
-
-          if @role.save
-            if registered
-              deliver_if(recipients: user, key: 'users.added_as_coowner') do |r|
-                UserMailer.sharing_notification(@role, r, inviter: current_user)
-                          .deliver_now
-              end
-            end
-            flash[:notice] = message
+            # User not found in the system, return error message
+            flash[:alert] = _('User email must be registered in DMPRoadmap before invitation is possible.')
           else
-            flash[:alert] = _('You must provide a valid email address and select a permission
-                               level.')
+            # User found in the system, proceed with role creation.
+            message += format(_('Plan shared with %{email}.'), email: user.email)
+            @role.user = user
+  
+            if @role.save
+              if registered
+                deliver_if(recipients: user, key: 'users.added_as_coowner') do |r|
+                  UserMailer.sharing_notification(@role, r, inviter: current_user)
+                            .deliver_now
+                end
+              end
+              flash[:notice] = message
+            else
+              flash[:alert] = _('You must provide a valid email address and select a permission
+                                 level.')
+            end
           end
           # rubocop:enable Metrics/BlockNesting
         end

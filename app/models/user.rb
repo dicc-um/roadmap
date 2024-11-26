@@ -66,7 +66,7 @@ class User < ApplicationRecord
   #   :lockable, :timeoutable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :omniauthable,
-         omniauth_providers: %i[shibboleth orcid]
+         omniauth_providers: %i[shibboleth orcid keycloakopenid]
 
   ##
   # User Notification Preferences
@@ -177,9 +177,11 @@ class User < ApplicationRecord
   ##
   # Load the user based on the scheme and id provided by the Omniauth call
   def self.from_omniauth(auth)
-    Identifier.by_scheme_name(auth.provider.downcase, 'User')
-              .where(value: auth.uid)
-              .first&.identifiable
+    find_or_create_by(provider: auth.provider, uid: auth.uid) do |user|
+      user.email = auth.extra.raw_info.email
+      user.firstname = auth.extra.raw_info.given_name
+      user.surname = auth.extra.raw_info.family_name
+    end
   end
 
   def self.to_csv(users)

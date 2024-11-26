@@ -43,6 +43,9 @@ db/test.sqlite3-journal
 *.sql.gz
 *.psql.gz
 
+# Ignore schema
+db/schema.rb
+
 # Ignore the SimpleCov output
 coverage
 

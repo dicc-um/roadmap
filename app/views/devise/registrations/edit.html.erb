@@ -12,10 +12,7 @@
           <a href="#personal-details" role="tab" class="nav-link"
              aria-controls="personal-details" data-toggle="tab"><%= _('Personal Details') %></a>
         </li>
-        <li role="password-details" class="nav-item">
-          <a href="#password-details" role="tab" class="nav-link"
-             aria-controls="password-details" data-toggle="tab"><%= _('Password') %></a>
-        </li>
+        <!-- Removed password edit form -->
         <% if @user.can_use_api? %>
           <li role="api-details" class="nav-item">
             <a href="#api-details" role="tab" class="nav-link"
