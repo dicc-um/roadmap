@@ -67,7 +67,18 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "dmp_roadmap_#{Rails.env}"
 
+  # SMTP Mailer configuration
   config.action_mailer.perform_caching = false
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch('SMTP_ADDRESS'),
+    port: ENV.fetch('SMTP_PORT'),
+    domain: ENV.fetch('SMTP_HOST'),
+    user_name: Rails.application.credentials.smtp_mail,
+    password: Rails.application.credentials.smtp_password,
+    authentication: ENV.fetch('SMTP_AUTH'),
+    enable_starttls_auto: ENV.fetch('SMTP_TLS')
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
